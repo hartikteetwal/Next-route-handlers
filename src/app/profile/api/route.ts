@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server"
-import { headers } from "next/headers"
+import { headers,cookies } from "next/headers"
 
 
 
@@ -15,5 +15,22 @@ import { headers } from "next/headers"
 export async function GET(req: NextRequest) {
     const headerList = await headers();
     console.log(headerList.get("Authorization"))
-    return new Response("<h1>fetch profile api data</h1>")
+
+    // ---> 1st approach use cookie without builtin cookies funtion 
+    const theme = req.cookies.get("theme")
+    console.log(theme)
+    
+    
+    // ---> 1st approach use cookie with builtin cookies funtion 
+    const cookieStore = await cookies()
+    cookieStore.set("resultPerPage","20")
+    console.log(cookieStore.get("resultPerPage"))
+    // console.log()
+    return new Response("<h1>fetch profile api data</h1>",{
+        headers:{
+            "content-Type":"text/html",
+            "Set-Cookie":"theme=dark"
+        }
+    })
 }
+
